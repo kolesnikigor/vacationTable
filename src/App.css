@@ -1,38 +1,69 @@
 .App {
   text-align: center;
 }
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.container {
+  width: 1385px;
+  margin: 0 auto;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.calendarBar {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-bottom: 25px;
+  margin-top: 35px;
 }
 
-.App-link {
-  color: #61dafb;
+.calendarBar__current {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  text-align: center;
+  color: #000;
+  width: 180px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.calendarBar__nav {
+  width: 30px;
+  height: 30px;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 0;
+  outline: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: transform 0.3s;
 }
+
+.calendarBar__nav:hover {
+   transform: scale(1.5);
+ }
+
+.calendarBar__nav_next {
+  background-image: url(./images/next.svg);
+}
+
+.calendarBar__nav_prev {
+  background-image: url(./images/prev.svg);
+}
+
+thead td {
+  height: 64px;
+  text-align: center;
+}
+thead td > span {
+  display: block;
+}
+thead td > span:first-child {
+   font-size: 12px;
+   line-height: 18px;
+ }
+
+thead td > span:last-child {
+   font-weight: 600;
+   font-size: 14px;
+   line-height: 21px;
+ }
