@@ -9,6 +9,8 @@
 }
 
 .calendarTable {
+  border-collapse: collapse;
+
   &__empty {
     border: 0 !important;
 
@@ -156,4 +158,31 @@
       border-right: 1px solid #9b99ff !important;
     }
   }
+
+  &__team-header:not(:first-child) td {
+    border-top: 30px solid white;
+    position: relative;
+  }
+
+  &__team-header:not(:first-child) {
+    td::before,
+    td::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: #d7d7d7;
+    }
+
+    td::before {
+      top: 0;
+    }
+
+    td::after {
+      top: -30px;
+    }
+  }
 }
+
+
