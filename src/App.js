@@ -107,7 +107,7 @@ class Modal extends Component {
       userSelectValue: "User name",
       typeDayOff: "Type Of Day Off",
       startDayVocation: "2021-02-22",
-      endDayVocation: new Date().toLocaleDateString("en-US", { year: "numeric", month: "numeric", day: "numeric" })
+      endDayVocation: new Date().toLocaleDateString("en-US", {year: "numeric", month: "numeric", day: "numeric"})
     }
     this.handleTeamSelect = this.handleTeamSelect.bind(this);
     this.handleUserSelect = this.handleUserSelect.bind(this);
@@ -116,15 +116,25 @@ class Modal extends Component {
     this.handleEndDayVocation = this.handleEndDayVocation.bind(this);
   }
 
-  handleTeamSelect(e) {this.setState({teamSelectValue: e.target.value});}
+  handleTeamSelect(e) {
+    this.setState({teamSelectValue: e.target.value});
+  }
 
-  handleUserSelect(e) {this.setState({userSelectValue: e.target.value});}
+  handleUserSelect(e) {
+    this.setState({userSelectValue: e.target.value});
+  }
 
-  handleDayOffSelect(e) {this.setState({typeDayOff: e.target.value});}
+  handleDayOffSelect(e) {
+    this.setState({typeDayOff: e.target.value});
+  }
 
-  handleStartDayVocation(e) {this.setState({startDayVocation: e.target.value});}
+  handleStartDayVocation(e) {
+    this.setState({startDayVocation: e.target.value});
+  }
 
-  handleEndDayVocation(e) {this.setState({endDayVocation: e.target.value});}
+  handleEndDayVocation(e) {
+    this.setState({endDayVocation: e.target.value});
+  }
 
   render() {
     // console.log("Start render",this.state.startDayVocation)
@@ -140,11 +150,13 @@ class Modal extends Component {
           <div className="form__date flex-row">
             <label className="form__date-label flex-column" htmlFor="start">
               From
-              <input className="form__date-input" value={this.state.startDayVocation} onChange={this.handleStartDayVocation} id="start" type="date"/>
+              <input className="form__date-input" value={this.state.startDayVocation}
+                     onChange={this.handleStartDayVocation} id="start" type="date"/>
             </label>
             <label className="form__date-label flex-column" htmlFor="end">
               To
-              <input className="form__date-input" value={this.state.endDayVocation} onChange={this.handleEndDayVocation} id="end" type="date"/></label>
+              <input className="form__date-input" value={this.state.endDayVocation} onChange={this.handleEndDayVocation}
+                     id="end" type="date"/></label>
           </div>
 
           <label className="form__title flex-column">
@@ -152,8 +164,7 @@ class Modal extends Component {
             <select className="form__select" value={this.state.teamSelectValue} onChange={this.handleTeamSelect}>
               <option>Team name</option>
               {this.props.teams
-                ? this.props.teams.map((team, i) => <option value={team.name} key={i}>{team.name}</option>)
-                : null}
+              && this.props.teams.map((team, i) => <option value={team.name} key={i}>{team.name}</option>)}
             </select>
           </label>
           <label className="form__title flex-column">
@@ -162,10 +173,9 @@ class Modal extends Component {
               <option>User name</option>
               {this.props.teams
                 ? (this.state.teamSelectValue && this.state.teamSelectValue !== "Team name"
-                    ? this.props.teams.find(item => item.name === this.state.teamSelectValue).members.map((member, i) =>
-                      <option value={member.name} key={i}>{member.name}</option>)
-                    : null
-                  )
+                  && this.props.teams.find(item => item.name === this.state.teamSelectValue).members.map((member, i) =>
+                    <option value={member.name} key={i}>{member.name}</option>)
+                )
                 : null}
             </select>
           </label>
@@ -193,7 +203,6 @@ class App extends Component {
     this.state = {
       date: new Date(),
       teams: null,
-      allMonthDays: [],
       isModalActive: false
     }
     this.nextMonth = this.nextMonth.bind(this);
@@ -231,7 +240,7 @@ class App extends Component {
       });
       date.setDate(date.getDate() + 1);
     }
-    this.setState({allMonthDays: days})
+    return days
   }
 
   fetchCalendar() {
@@ -294,21 +303,19 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.getDaysOfActivePeriod();
     this.fetchCalendar();
   }
 
   render() {
     return <div className="container">
       <Navigation next={this.nextMonth} prev={this.prevMonth} date={this.state.date}/>
-      {this.state.isModalActive
-        ? <Modal
-          teams={this.state.teams}
-          modalToggle={this.handlerModal}
-          isModalActive={this.state.isModalActive}/>
-      : null}
+      {this.state.isModalActive && <Modal
+        teams={this.state.teams}
+        modalToggle={this.handlerModal}
+        isModalActive={this.state.isModalActive}/>
+      }
       {this.state.teams
-        ? <Table allDays={this.state.allMonthDays} teams={this.state.teams} date={this.state.date}
+        ? <Table allDays={this.getDaysOfActivePeriod()} teams={this.state.teams} date={this.state.date}
                  modalToggle={this.handlerModal}
         />
         : <div className="loading__wrapper">
