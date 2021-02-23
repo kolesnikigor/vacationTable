@@ -1,62 +1,21 @@
-import './App.css';
-import {Component} from 'react';
-import teamIcon from "./images/team.svg";
-import toggleIcon from "./images/toggle.svg";
+import './Styles/App.scss';
+import {Component, React} from 'react';
+import plusIcon from "./images/plus.svg";
+import PropTypes from "prop-types";
+import {Navigation} from "./components/Navigation/Navigation";
+import {Teams} from "./components/Teams/Teams";
+import {Modal} from "./components/Modal/Modal";
 
 
-function Navigation({date, next, prev}) {
-  return <div className="calendarBar">
-    <button onClick={prev} className="calendarBar__nav calendarBar__nav_prev"/>
-    <span className="calendarBar__current">{date.toLocaleDateString("en-US", {month: "long", year: "numeric"})}</span>
-    <button onClick={next} className="calendarBar__nav calendarBar__nav_next"/>
-  </div>
-}
-
-function Table({allDays, teams, date}) {
-  let Rows = [];
-
-  if (teams && allDays) {
-    teams.forEach((team, i) => {
-      Rows.push(
-        <>
-          <tr className="calendarTable__team-header">
-            <td key={i}>
-              <div className="calendarTable__team-title">
-                <span className="calendarTable__team-name">{team.name}</span>>
-                <span>
-                  <img src={teamIcon}/>
-                  <span className="calendarTable__team-count">{team.members.length}</span>
-                </span>
-                <span className="calendarTable__percentage">{team.percentageOfAbsent[date.getMonth()]}%</span>
-                <button className="calendarTable__team-toogle">
-                  <img src={toggleIcon}/>
-                </button>
-              </div>
-            </td>
-            {allDays.map((day, i) => {
-                return <td key={i} className={day.isDayOff ? "calendarTable__dayOff" : ""}>
-                </td>
-              }
-            )}
-          </tr>
-          {team.members.map(((member, i) => {
-            return <tr>
-              <td key={i}>{member.name}</td>
-              {allDays.map((day, i) => {
-                  return <td key={i} className={day.isDayOff ? "calendarTable__dayOff" : ""}>
-                  </td>
-                }
-              )}
-            </tr>
-          }))}
-        </>)
-    })
-  }
+function Table({allDays, teams, date, modalToggle}) {
   return <table className="calendarTable">
     <thead>
     <tr>
       <td className="calendarTable__addVocation">
-        <button>Add Vacation</button>
+        <button onClick={modalToggle} className="button button_a">
+          <img src={plusIcon} alt="#"/>
+          <span>Add Vacation</span>
+        </button>
       </td>
       {allDays.map((day, i) => {
           return <td key={i} className={day.isDayOff ? "calendarTable__dayOff" : ""}>
@@ -67,13 +26,16 @@ function Table({allDays, teams, date}) {
       )}
     </tr>
     </thead>
-    {teams
-      ? <tbody>{Rows}</tbody>
-      : <tr className="loading__wrapper">
-        <div className="lds-dual-ring"></div>
-      </tr>
-    }
+    <tbody>
+    <Teams allDays={allDays} teams={teams} date={date}/>
+    </tbody>
   </table>
+}
+
+Table.propTypes = {
+  allDays: PropTypes.arrayOf(PropTypes.object),
+  teams: PropTypes.array,
+  date: PropTypes.object
 }
 
 class App extends Component {
@@ -82,11 +44,12 @@ class App extends Component {
     this.state = {
       date: new Date(),
       teams: null,
-      allMonthDays: []
+      isModalActive: false
     }
     this.nextMonth = this.nextMonth.bind(this);
     this.prevMonth = this.prevMonth.bind(this);
     this.fetchCalendar = this.fetchCalendar.bind(this);
+    this.handlerModal = this.handlerModal.bind(this);
   }
 
   nextMonth() {
@@ -97,6 +60,10 @@ class App extends Component {
   prevMonth() {
     this.setState({date: new Date(this.state.date.setMonth(this.state.date.getMonth() - 1))});
     this.getDaysOfActivePeriod();
+  }
+
+  handlerModal() {
+    this.setState({isModalActive: !this.state.isModalActive});
   }
 
   getDaysOfActivePeriod() {
@@ -114,7 +81,7 @@ class App extends Component {
       });
       date.setDate(date.getDate() + 1);
     }
-    this.setState({allMonthDays: days})
+    return days
   }
 
   fetchCalendar() {
@@ -132,7 +99,7 @@ class App extends Component {
               ],
             },
             {
-              name: "FE_Team_User1",
+              name: "FE_Team_User2",
               vacations: [
                 {startDate: "20.02.2020", endDate: "22.02.2020", type: "UnPaid"},
                 {startDate: "20.03.2020", endDate: "22.03.2020", type: "UnPaid"},
@@ -145,14 +112,14 @@ class App extends Component {
           percentageOfAbsent: [0, 2, 0, 0, 1, 2, 2, 2, 2, 2, 1, 1],
           members: [
             {
-              name: "FE_Team_User1",
+              name: "BE_Team_User1",
               vacations: [
                 {startDate: "15.02.2020", endDate: "22.02.2020", type: "UnPaid"},
                 {startDate: "20.03.2020", endDate: "22.03.2020", type: "UnPaid"},
               ],
             },
             {
-              name: "FE_Team_User1",
+              name: "BE_Team_User2",
               vacations: [
                 {startDate: "20.02.2020", endDate: "22.02.2020", type: "UnPaid"},
                 {startDate: "20.03.2020", endDate: "22.03.2020", type: "UnPaid"},
@@ -162,7 +129,6 @@ class App extends Component {
         },
       ],
     };
-
     return fetch("https://jsonplaceholder.typicode.com/posts/1", {
       method: "PUT",
       body: JSON.stringify(departmentTeams),
@@ -173,19 +139,29 @@ class App extends Component {
       .then((response) => response.json())
       .then((json) => {
         this.setState({teams: json.teams});
-      });
+      }).catch(err => console.log(err));
   }
 
   componentDidMount() {
-    this.getDaysOfActivePeriod();
     this.fetchCalendar();
-
   }
 
   render() {
     return <div className="container">
       <Navigation next={this.nextMonth} prev={this.prevMonth} date={this.state.date}/>
-      <Table allDays={this.state.allMonthDays} teams={this.state.teams} date={this.state.date}/>
+      {this.state.isModalActive && <Modal
+        teams={this.state.teams}
+        modalToggle={this.handlerModal}
+        isModalActive={this.state.isModalActive}/>
+      }
+      {this.state.teams
+        ? <Table allDays={this.getDaysOfActivePeriod()} teams={this.state.teams} date={this.state.date}
+                 modalToggle={this.handlerModal}
+        />
+        : <div className="loading__wrapper">
+          <div className="lds-dual-ring"/>
+        </div>
+      }
     </div>
   }
 }
