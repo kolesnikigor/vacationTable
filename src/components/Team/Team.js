@@ -1,6 +1,7 @@
 import teamIcon from "../../images/team.svg";
 import toggleIcon from "../../images/toggle.svg";
 import {React, useState} from "react";
+import PropTypes from "prop-types";
 import checkVacationsDate from '../../utils/utils.js'
 
 
@@ -9,7 +10,7 @@ export const Team = ({team, date, allDays}) => {
 
     const toggleHandler = () => {
         setIsTeamsMembersShown((prev)=> !prev);
-    }
+    };
     return (
         <>
             <tr className="calendarTable__team-header">
@@ -47,4 +48,14 @@ export const Team = ({team, date, allDays}) => {
             }))}
         </>
     );
+};
+
+Team.propTypes = {
+    team: PropTypes.shape({
+        name:PropTypes.string,
+        members: PropTypes.arrayOf(PropTypes.object),
+        percentageOfAbsent: PropTypes.arrayOf(PropTypes.number)
+    }).isRequired,
+    allDays: PropTypes.arrayOf(PropTypes.object).isRequired,
+    date: PropTypes.object.isRequired
 }
