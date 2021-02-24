@@ -1,42 +1,8 @@
 import './Styles/App.scss';
 import {Component, React} from 'react';
-import plusIcon from "./images/plus.svg";
-import PropTypes from "prop-types";
 import {Navigation} from "./components/Navigation/Navigation";
-import {Teams} from "./components/Teams/Teams";
+import {Table} from "./components/Table/Table";
 import {Modal} from "./components/Modal/Modal";
-
-
-function Table({allDays, teams, date, modalToggle}) {
-  return <table className="calendarTable">
-    <thead>
-    <tr>
-      <td className="calendarTable__addVocation">
-        <button onClick={modalToggle} className="button button_a">
-          <img src={plusIcon} alt="#"/>
-          <span>Add Vacation</span>
-        </button>
-      </td>
-      {allDays.map((day, i) => {
-          return <td key={i} className={day.isDayOff ? "calendarTable__dayOff" : ""}>
-            <span>{day.dayName}</span>
-            <span>{day.date}</span>
-          </td>
-        }
-      )}
-    </tr>
-    </thead>
-    <tbody>
-    <Teams allDays={allDays} teams={teams} date={date}/>
-    </tbody>
-  </table>
-}
-
-Table.propTypes = {
-  allDays: PropTypes.arrayOf(PropTypes.object),
-  teams: PropTypes.array,
-  date: PropTypes.object
-}
 
 class App extends Component {
   constructor(props) {
