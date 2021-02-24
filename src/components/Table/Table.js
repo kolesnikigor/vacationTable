@@ -29,7 +29,7 @@ export function Table({allDays, teams, date, modalToggle}) {
 }
 
 Table.propTypes = {
-    allDays: PropTypes.array,
-    teams: PropTypes.array,
+    allDays: PropTypes.arrayOf(PropTypes.object),
+    teams: PropTypes.arrayOf(PropTypes.object),
     date: PropTypes.object
 }

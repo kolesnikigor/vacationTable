@@ -1,4 +1,6 @@
 import {React, Component} from "react";
+import PropTypes from "prop-types";
+import {Table} from "../Table/Table";
 
 export class Modal extends Component {
     constructor(props) {
@@ -38,8 +40,6 @@ export class Modal extends Component {
     }
 
     render() {
-        // console.log("Start render",this.state.startDayVocation)
-        // console.log("End render",this.state.endDayVocation)
         return <div className="modal">
             <div className="modal__container">
                 <div className="modal__header">
@@ -96,4 +96,10 @@ export class Modal extends Component {
             </div>
         </div>
     }
+}
+
+Modal.propTypes = {
+    teams: PropTypes.arrayOf(PropTypes.object).isRequired,
+    isModalActive: PropTypes.bool.isRequired,
+    modalToggle: PropTypes.func.isRequired
 }
