@@ -2,7 +2,7 @@ import teamIcon from '../../images/team.svg'
 import toggleIcon from '../../images/toggle.svg'
 import { React, useState } from 'react'
 import PropTypes from 'prop-types'
-import checkVacationsDate from '../../utils/utils.js'
+import { checkVacationsDate } from '../../utils/utils.js'
 
 export const Team = ({ team, date, allDays }) => {
 	const [isTeamsMembersShown, setIsTeamsMembersShown] = useState(true)
