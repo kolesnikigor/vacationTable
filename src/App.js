@@ -236,14 +236,6 @@ class App extends Component {
 						<div className='lds-dual-ring' />
 					</div>
 				)}
-				{console.log('Form', this.state.isFormValid)}
-				{console.log(
-					'render if',
-					this.state.teamSelectValue !== 'Team name' &&
-						this.state.userSelectValue !== 'User name' &&
-						this.state.typeDayOff !== 'Type Of Day Off'
-				)}
-				<pre>{JSON.stringify(this.state, null, '\t')}</pre>
 			</div>
 		)
 	}

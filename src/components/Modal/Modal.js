@@ -1,5 +1,6 @@
 import { React } from 'react'
 import PropTypes from 'prop-types'
+import './modal.scss'
 
 export const Modal = ({
 	teams,
@@ -86,7 +87,6 @@ export const Modal = ({
 							<option value='UnPaid'>UnPaid Day Off (UPD)</option>
 						</select>
 					</label>
-					{console.log(isFormValid)}
 					{!isFormValid && <div style={{ color: 'red' }}>Please fill in the form correctly!</div>}
 					<div className='form__footer'>
 						<button className='button button_b' onClick={modalToggle}>
