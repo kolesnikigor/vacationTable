@@ -105,6 +105,7 @@ class App extends Component {
 			type: this.state.typeDayOff,
 		})
 		this.setState({ teams: newTeams })
+		this.setState({ isModalActive: !this.state.isModalActive })
 	}
 
 	nextMonth() {
