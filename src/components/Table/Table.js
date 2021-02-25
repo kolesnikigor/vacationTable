@@ -2,6 +2,7 @@ import plusIcon from "../../images/plus.svg";
 import {Teams} from "../Teams/Teams";
 import {React} from "react";
 import PropTypes from "prop-types";
+import './table.scss'
 
 export function Table({allDays, teams, date, modalToggle}) {
     return <table className="calendarTable">
