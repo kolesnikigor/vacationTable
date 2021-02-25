@@ -3,7 +3,7 @@ import { Component, React } from 'react'
 import { Navigation } from './components/Navigation/Navigation'
 import { Table } from './components/Table/Table'
 import { Modal } from './components/Modal/Modal'
-import { convertDateForStore, convertDateToShow } from './utils/utils'
+import { convertDateForStore, convertDateToShow, convertDateToCompare } from './utils/utils'
 
 class App extends Component {
 	constructor(props) {
@@ -41,55 +41,52 @@ class App extends Component {
 		this.handleStartDayVocation = this.handleStartDayVocation.bind(this)
 		this.handleEndDayVocation = this.handleEndDayVocation.bind(this)
 		this.handleSubmit = this.handleSubmit.bind(this)
+		this.isFormValid = this.isFormValid.bind(this)
 	}
 
 	handleTeamSelect(e) {
-		this.setState({ teamSelectValue: e.target.value })
-		if (
-			e.target.value !== 'Team name' &&
-			this.state.userSelectValue !== 'User name' &&
-			this.state.typeDayOff !== 'Type Of Day Off'
-		) {
-			this.setState({ isFormValid: true })
-		} else {
-			this.setState({ isFormValid: false })
-		}
+		this.setState({ teamSelectValue: e.target.value }, () => {
+			this.isFormValid()
+		})
 	}
 
 	handleUserSelect(e) {
-		this.setState({ userSelectValue: e.target.value })
+		this.setState({ userSelectValue: e.target.value }, () => {
+			this.isFormValid()
+		})
+	}
+
+	handleDayOffSelect(e) {
+		this.setState({ typeDayOff: e.target.value }, () => {
+			this.isFormValid()
+		})
+	}
+
+	handleStartDayVocation(e) {
+		this.setState({ startDayVocation: e.target.value }, () => {
+			this.isFormValid()
+		})
+	}
+
+	handleEndDayVocation(e) {
+		this.setState({ endDayVocation: e.target.value }, () => {
+			this.isFormValid()
+		})
+	}
+
+	isFormValid() {
 		if (
+			convertDateToCompare(this.state.startDayVocation) >=
+				new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) &&
+			convertDateToCompare(this.state.startDayVocation) <= convertDateToCompare(this.state.endDayVocation) &&
 			this.state.teamSelectValue !== 'Team name' &&
-			e.target.value !== 'User name' &&
+			this.state.userSelectValue !== 'User name' &&
 			this.state.typeDayOff !== 'Type Of Day Off'
 		) {
 			this.setState({ isFormValid: true })
 		} else {
 			this.setState({ isFormValid: false })
 		}
-	}
-
-	handleDayOffSelect(e) {
-		this.setState({ typeDayOff: e.target.value })
-		if (
-			this.state.teamSelectValue !== 'Team name' &&
-			this.state.userSelectValue !== 'User name' &&
-			e.target.value !== 'Type Of Day Off'
-		) {
-			this.setState((prev) => {
-				return { isFormValid: !prev.isFormValid }
-			})
-		} else {
-			this.setState({ isFormValid: false })
-		}
-	}
-
-	handleStartDayVocation(e) {
-		this.setState({ startDayVocation: e.target.value })
-	}
-
-	handleEndDayVocation(e) {
-		this.setState({ endDayVocation: e.target.value })
 	}
 
 	handleSubmit(e) {
@@ -104,8 +101,27 @@ class App extends Component {
 			endDate: convertDateForStore(this.state.endDayVocation),
 			type: this.state.typeDayOff,
 		})
-		this.setState({ teams: newTeams })
-		this.setState({ isModalActive: !this.state.isModalActive })
+		this.setState({
+			teams: newTeams,
+			isModalActive: !this.state.isModalActive,
+			teamSelectValue: 'Team name',
+			userSelectValue: 'User name',
+			typeDayOff: 'Type Of Day Off',
+			startDayVocation: convertDateToShow(
+				new Date().toLocaleDateString('en-US', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+				})
+			),
+			endDayVocation: convertDateToShow(
+				new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleDateString('en-US', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+				})
+			),
+		})
 	}
 
 	nextMonth() {
@@ -119,7 +135,26 @@ class App extends Component {
 	}
 
 	handlerModal() {
-		this.setState({ isModalActive: !this.state.isModalActive })
+		this.setState({
+			isModalActive: !this.state.isModalActive,
+			teamSelectValue: 'Team name',
+			userSelectValue: 'User name',
+			typeDayOff: 'Type Of Day Off',
+			startDayVocation: convertDateToShow(
+				new Date().toLocaleDateString('en-US', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+				})
+			),
+			endDayVocation: convertDateToShow(
+				new Date(new Date().setDate(new Date().getDate() + 1)).toLocaleDateString('en-US', {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+				})
+			),
+		})
 	}
 
 	getDaysOfActivePeriod() {
