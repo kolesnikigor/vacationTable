@@ -1,6 +1,8 @@
 import { React } from 'react'
 import PropTypes from 'prop-types'
+import toggleIcon from '../../images/toggle.svg'
 import './modal.scss'
+import { convertDateToCompare } from '../../utils/utils'
 
 export const Modal = ({
 	teams,
@@ -23,7 +25,9 @@ export const Modal = ({
 			<div className='modal__container'>
 				<div className='modal__header'>
 					<h2 className='modal__title'>Vacation Request</h2>
-					<span className='modal__vacation-period'>8 Days</span>
+					<span className='modal__vacation-period'>
+						{(convertDateToCompare(endDayVocation) - convertDateToCompare(startDayVocation)) / 86400000 + 1} Days
+					</span>
 				</div>
 				<form className='form' action=''>
 					<h3 className='form__title'>Dates</h3>
@@ -52,6 +56,7 @@ export const Modal = ({
 
 					<label className='form__title flex-column'>
 						Team
+						<img className='form__select-icon' src={toggleIcon} />
 						<select className='form__select' value={teamSelectValue} onChange={handleTeamSelect}>
 							<option value='Team name'>Team name</option>
 							{teams &&
@@ -64,6 +69,7 @@ export const Modal = ({
 					</label>
 					<label className='form__title flex-column'>
 						User
+						<img className='form__select-icon' src={toggleIcon} />
 						<select className='form__select' value={userSelectValue} onChange={handleUserSelect}>
 							<option value='User name'>User name</option>
 							{teams
@@ -81,6 +87,7 @@ export const Modal = ({
 					</label>
 					<label className='form__title flex-column'>
 						Vac Type
+						<img className='form__select-icon' src={toggleIcon} />
 						<select className='form__select' value={typeDayOff} onChange={handleDayOffSelect}>
 							<option value='Type Of Day Off'>Type Of Day Off</option>
 							<option value='Paid'>Paid Day Off (PD)</option>

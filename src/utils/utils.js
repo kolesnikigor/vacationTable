@@ -23,3 +23,9 @@ export function convertDateForStore(date) {
 	const outgoingDate = `${incomingDate[2]}.${incomingDate[1]}.${incomingDate[0]}`
 	return outgoingDate
 }
+
+export function convertDateToCompare(date) {
+	const incomingDate = date.split('-')
+	const outgoingDate = `${incomingDate[0]}/${incomingDate[1]}/${incomingDate[2]}`
+	return new Date(outgoingDate)
+}

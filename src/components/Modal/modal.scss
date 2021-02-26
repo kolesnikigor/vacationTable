@@ -43,6 +43,7 @@
     font-size: 14px;
     line-height: 21px;
     margin-bottom: 6px;
+    position: relative;
   }
   &__date {
     margin: 0 -15px 30px;
@@ -50,6 +51,7 @@
 
   &__date-label {
     padding: 0 15px;
+    width: 50%;
   }
 
   &__date-input {
@@ -58,6 +60,18 @@
     font-size: 14px;
     border: none;
     border-bottom: 1px solid #ccc;
+    position: relative;
+    &:hover {
+      cursor: pointer;
+    }
+    &::-webkit-inner-spin-button,
+    &::-webkit-calendar-picker-indicator {
+      position: absolute;
+      width: 100%;
+      opacity:0;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
   }
 
   &__select {
@@ -69,6 +83,19 @@
     padding: 0 15px;
     font-size: 12px;
     margin: 6px 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &__select-icon {
+    transform: rotate(180deg);
+    position: absolute;
+    top: 44px;
+    right: 15px;
   }
 
   &__footer {
@@ -80,10 +107,6 @@
   }
 }
 
-
-
-
-
 .flex-column {
   display: flex;
   flex-direction: column;
@@ -92,6 +115,4 @@
 .flex-row {
   display: flex;
 }
-.modal.active {
-  display: block;
-}
+
