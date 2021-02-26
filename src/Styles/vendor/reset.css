@@ -127,12 +127,3 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap");
-
-html,
-body {
-  font-family: "Open Sans", sans-serif;;
-  font-size: 14px;
-  line-height: 1.3em;
-}
