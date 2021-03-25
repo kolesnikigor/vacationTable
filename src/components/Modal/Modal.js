@@ -1,22 +1,30 @@
-import {React} from "react";
-import PropTypes from "prop-types";
+import React, {useContext} from "react";
 
-export const Modal = ({
-                        teams,
-                        modalToggle,
-                        teamSelectValue,
-                        userSelectValue,
-                        typeDayOff,
-                        startDayVocation,
-                        endDayVocation,
-                        handleTeamSelect,
-                        handleUserSelect,
-                        handleDayOffSelect,
-                        handleStartDayVocation,
-                        handleEndDayVocation,
-                        handleSubmit,
-                        isFormValid
-                      }) => {
+import {Context} from "../../Context";
+
+export const Modal = () => {
+
+  const context = useContext(Context);
+  const {
+    state,
+    modalToggle,
+    handleTeamSelect,
+    handleUserSelect,
+    handleDayOffSelect,
+    handleStartDayVocation,
+    handleEndDayVocation,
+    handleSubmit
+  } = context;
+  const {
+    teams,
+    teamSelectValue,
+    userSelectValue,
+    typeDayOff,
+    startDayVocation,
+    endDayVocation,
+    isFormValid
+  } = state;
+
   return (<div className="modal">
       <div className="modal__container">
         <div className="modal__header">
@@ -70,7 +78,6 @@ export const Modal = ({
               <option value="UnPaid">UnPaid Day Off (UPD)</option>
             </select>
           </label>
-          {console.log(isFormValid)}
           {!isFormValid && <div style={{color: "red"}}>Please fill in the form correctly!</div>}
           <div className="form__footer">
 
@@ -81,21 +88,4 @@ export const Modal = ({
       </div>
     </div>
   )
-}
-
-Modal.propTypes = {
-  teams: PropTypes.arrayOf(PropTypes.object).isRequired,
-  modalToggle: PropTypes.func.isRequired,
-  teamSelectValue: PropTypes.string.isRequired,
-  userSelectValue: PropTypes.string.isRequired,
-  typeDayOff: PropTypes.string.isRequired,
-  startDayVocation: PropTypes.string.isRequired,
-  endDayVocation: PropTypes.string.isRequired,
-  handleTeamSelect: PropTypes.func.isRequired,
-  handleUserSelect: PropTypes.func.isRequired,
-  handleDayOffSelect: PropTypes.func.isRequired,
-  handleStartDayVocation: PropTypes.func.isRequired,
-  handleEndDayVocation: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  isFormValid: PropTypes.bool.isRequired
 }

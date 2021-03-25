@@ -1,15 +1,12 @@
+import {useContext} from "react";
+
 import {Team} from "../Team/Team";
-import {React} from "react";
-import PropTypes from "prop-types";
+import {Context} from '../../Context'
 
-export function Teams({teams, allDays, date}) {
-    return(
-        teams.map((team)=> <Team team ={team} key={team.name} allDays={allDays} date={date} />)
-    );
+export function Teams() {
+  const {state} = useContext(Context);
+  return (
+    state.teams.map((team) => <Team team={team} key={team.name}/>)
+  );
 }
 
-Teams.propTypes = {
-    allDays: PropTypes.arrayOf(PropTypes.object),
-    teams: PropTypes.arrayOf(PropTypes.object),
-    date: PropTypes.object
-}

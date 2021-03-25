@@ -1,9 +1,12 @@
 import './Styles/App.scss';
-import {Component, React} from 'react';
+import {Component} from 'react';
 import {Navigation} from "./components/Navigation/Navigation";
 import {Table} from "./components/Table/Table";
 import {Modal} from "./components/Modal/Modal";
+import {LoadingIndicator} from "./components/LoadingIndicator/LoadingIndicator";
 import {convertDateForStore, convertDateToShow} from "./utils/utils";
+import {fetchCalendar} from './Apis/api';
+import {Context} from './Context'
 
 class App extends Component {
   constructor(props) {
@@ -27,9 +30,9 @@ class App extends Component {
       isFormValid: false,
       teams: null
     }
+
     this.nextMonth = this.nextMonth.bind(this);
     this.prevMonth = this.prevMonth.bind(this);
-    this.fetchCalendar = this.fetchCalendar.bind(this);
     this.handlerModal = this.handlerModal.bind(this);
     this.handleTeamSelect = this.handleTeamSelect.bind(this);
     this.handleUserSelect = this.handleUserSelect.bind(this);
@@ -38,7 +41,6 @@ class App extends Component {
     this.handleEndDayVocation = this.handleEndDayVocation.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
 
   handleTeamSelect(e) {
     this.setState({teamSelectValue: e.target.value});
@@ -61,7 +63,6 @@ class App extends Component {
       this.setState({isFormValid: false})
     }
   }
-
 
   handleDayOffSelect(e) {
     this.setState({typeDayOff: e.target.value});
@@ -95,7 +96,7 @@ class App extends Component {
         endDate: convertDateForStore(this.state.endDayVocation),
         type: this.state.typeDayOff
       });
-    this.setState( {teams: newTeams});
+    this.setState({teams: newTeams});
   }
 
   nextMonth() {
@@ -130,103 +131,35 @@ class App extends Component {
     return days
   }
 
-  fetchCalendar() {
-    const departmentTeams = {
-      teams: [
-        {
-          name: "Frontend Team",
-          percentageOfAbsent: [0, 2, 0, 0, 1, 22, 2, 2, 2, 2, 11, 1],
-          members: [
-            {
-              name: "FE_Team_User1",
-              vacations: [
-                {startDate: "20.02.2021", endDate: "22.03.2021", type: "Paid"},
-                {startDate: "20.11.2020", endDate: "22.11.2020", type: "Paid"},
-              ],
-            },
-            {
-              name: "FE_Team_User2",
-              vacations: [
-                {startDate: "20.02.2020", endDate: "22.02.2020", type: "UnPaid"},
-                {startDate: "20.03.2020", endDate: "22.03.2020", type: "UnPaid"},
-              ],
-            },
-          ],
-        },
-        {
-          name: "Backend Team",
-          percentageOfAbsent: [0, 2, 0, 0, 1, 2, 2, 2, 2, 2, 1, 1],
-          members: [
-            {
-              name: "BE_Team_User1",
-              vacations: [
-                {startDate: "15.02.2020", endDate: "22.02.2020", type: "UnPaid"},
-                {startDate: "20.03.2020", endDate: "22.03.2020", type: "UnPaid"},
-              ],
-            },
-            {
-              name: "BE_Team_User2",
-              vacations: [
-                {startDate: "20.02.2020", endDate: "22.02.2020", type: "UnPaid"},
-                {startDate: "20.03.2020", endDate: "22.03.2020", type: "UnPaid"},
-              ],
-            },
-          ],
-        },
-      ],
-    };
-    return fetch("https://jsonplaceholder.typicode.com/posts/1", {
-      method: "PUT",
-      body: JSON.stringify(departmentTeams),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        this.setState({teams: json.teams});
-      }).catch(err => console.log(err));
-  }
-
   componentDidMount() {
-    this.fetchCalendar();
+    fetchCalendar().then((json) => {
+      this.setState({teams: json.teams});
+    });
   }
 
   render() {
-    return <div className="container">
-      <Navigation next={this.nextMonth} prev={this.prevMonth} date={this.state.date}/>
-      {this.state.isModalActive && <Modal
-        teams={this.state.teams}
-        modalToggle={this.handlerModal}
-        teamSelectValue={this.state.teamSelectValue}
-        userSelectValue={this.state.userSelectValue}
-        typeDayOff={this.state.typeDayOff}
-        startDayVocation={this.state.startDayVocation}
-        endDayVocation={this.state.endDayVocation}
-        handleTeamSelect={this.handleTeamSelect}
-        handleUserSelect={this.handleUserSelect}
-        handleDayOffSelect={this.handleDayOffSelect}
-        handleStartDayVocation={this.handleStartDayVocation}
-        handleEndDayVocation={this.handleEndDayVocation}
-        handleSubmit={this.handleSubmit}
-        isFormValid={this.state.isFormValid}
-      />
-      }
-      {this.state.teams
-        ? <Table allDays={this.getDaysOfActivePeriod()} teams={this.state.teams} date={this.state.date}
-                 modalToggle={this.handlerModal}
-        />
-        : <div className="loading__wrapper">
-          <div className="lds-dual-ring"/>
-        </div>
-      }
-      {console.log("Form",this.state.isFormValid)}
-      {console.log("render if",this.state.teamSelectValue !== "Team name"
-        && this.state.userSelectValue !== "User name"
-        && this.state.typeDayOff !== "Type Of Day Off")
-      }
-      <pre>{JSON.stringify(this.state, null, "\t")}</pre>
-    </div>
+    const context = {
+      state: this.state,
+      next: this.nextMonth,
+      prev: this.prevMonth,
+      allDays: this.getDaysOfActivePeriod(),
+      modalToggle: this.handlerModal,
+      handleTeamSelect: this.handleTeamSelect,
+      handleUserSelect: this.handleUserSelect,
+      handleDayOffSelect: this.handleDayOffSelect,
+      handleStartDayVocation: this.handleStartDayVocation,
+      handleEndDayVocation: this.handleEndDayVocation,
+      handleSubmit: this.handleSubmit
+    };
+    return (
+      <div className="container">
+        <Context.Provider value={context}>
+          <Navigation/>
+          {this.state.isModalActive && <Modal/>}
+          {this.state.teams ? <Table/> : <LoadingIndicator/>}
+        </Context.Provider>
+      </div>
+    )
   }
 }
 

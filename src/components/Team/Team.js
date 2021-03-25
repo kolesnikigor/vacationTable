@@ -1,12 +1,16 @@
+import {useContext, useState} from "react";
+import PropTypes from "prop-types";
+
 import teamIcon from "../../images/team.svg";
 import toggleIcon from "../../images/toggle.svg";
-import {React, useState} from "react";
-import PropTypes from "prop-types";
 import {checkVacationsDate} from '../../utils/utils.js'
+import {Context} from '../../Context'
 
 
-export const Team = ({team, date, allDays}) => {
+export const Team = ({team}) => {
   const [isTeamsMembersShown, setIsTeamsMembersShown] = useState(true);
+  const {state, allDays} = useContext(Context);
+  const {date} = state;
 
   const toggleHandler = () => {
     setIsTeamsMembersShown((prev) => !prev);
@@ -22,7 +26,7 @@ export const Team = ({team, date, allDays}) => {
               <span>{team.members.length}</span>
             </span>
             <span className="calendarTable__percentage">{team.percentageOfAbsent[date.getMonth()]}%</span>
-            <button className="calendarTable__team-toogle" onClick={toggleHandler}>
+            <button className="calendarTable__team-toggle" onClick={toggleHandler}>
               <img src={toggleIcon} style={{transform: isTeamsMembersShown ? "none" : "rotate(180deg)"}}/>
             </button>
           </div>
@@ -56,6 +60,4 @@ Team.propTypes = {
     members: PropTypes.arrayOf(PropTypes.object),
     percentageOfAbsent: PropTypes.arrayOf(PropTypes.number)
   }).isRequired,
-  allDays: PropTypes.arrayOf(PropTypes.object).isRequired,
-  date: PropTypes.object.isRequired
 }
