@@ -18,7 +18,7 @@ export const Team = ({team}) => {
   return (
     <>
       <tr className="calendarTable__team-header">
-        <td>
+        <td onClick={toggleHandler}>
           <div className="calendarTable__team-title">
             <span className="calendarTable__team-name">{team.name}</span>
             <span className="calendarTable__team-count">
@@ -26,7 +26,7 @@ export const Team = ({team}) => {
               <span>{team.members.length}</span>
             </span>
             <span className="calendarTable__percentage">{team.percentageOfAbsent[date.getMonth()]}%</span>
-            <button className="calendarTable__team-toggle" onClick={toggleHandler}>
+            <button className="calendarTable__team-toggle" >
               <img src={toggleIcon} style={{transform: isTeamsMembersShown ? "none" : "rotate(180deg)"}}/>
             </button>
           </div>
